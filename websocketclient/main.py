@@ -17,9 +17,10 @@ def data_store(new_data):
     except:
         pass
     if type(new_data) == dict:
-        event_manager.call_event(onData(new_data))
+        event_manager.call_event(onData())
+        onData().init(new_data)
         if config['log_show']:
-            log.logger.info(onData(new_data).data)
+            log.logger.info(onData().get())
 
 def ws_callback(message):
     data_store(message)
