@@ -1,39 +1,25 @@
 import datetime
 import json
+import shutil
 from cdps.plugin.manager import Manager, Listener
 from cdps.plugin.events import Event,onServerStartEvent
 from cdps.plugin.thread import new_thread
 from cdps.utils.logger import Log
 
 import plugins.websocketclient.src.ws as ws_
-from plugins.websocketclient.src.events import onRun
+from plugins.websocketclient.src.events import onData, onRun
 
 ###
 
-with open("./config/websocketclient.json", 'r', encoding='utf-8') as f:
-    config = json.loads(f.read())
-
-# class onServerStartListener(Listener):
-#     event = onServerStartEvent
-#     is_run = False
-
-#     def on_event(self, event):
-#         if (self.is_run == False):
-#             ws_.init(config['ws_send_server'])
-#             task_thread_1 = threading.Thread(target=self.get_websocket)
-#             task_thread_1.start()
-#             self.is_run = True
-
 def data_store(new_data):
-    lastest_time = datetime.datetime.now()
     try:
         new_data = json.loads(new_data)
     except:
         pass
     if type(new_data) == dict:
-        log.logger.info(new_data)
-        if new_data["type"] == "data":
-            log.logger.info(new_data)
+        event_manager.call_event(onData(new_data))
+        if config['log_show']:
+            log.logger.info(onData(new_data).data)
 
 def ws_callback(message):
     data_store(message)
@@ -49,33 +35,26 @@ def get_websocket():
 
 log = Log()
 event_manager = Manager()
+
+src_file = "./plugins/websocketclient/config.json"
+dst_file = "./config/websocketclient.json"
+backup_file = "./config/websocketclient_backup.json"
+
+with open(dst_file, 'r', encoding='utf-8') as f:
+    config = json.loads(f.read())
+
+if 'log_show' not in config:
+    try:
+        shutil.copy2(dst_file, backup_file)
+        log.logger.info(f"舊設定檔案已成功複製到 {backup_file}")
+        # 複製檔案
+        shutil.copy2(src_file, dst_file)
+        log.logger.info(f"新的設定檔案已成功複製到 {dst_file}")
+        with open(dst_file, 'r', encoding='utf-8') as f:
+            config = json.loads(f.read())
+    except IOError as e:
+        log.logger.error(f"無法複製檔案: {e}")
+    except Exception as e:
+        log.logger.error(f"發生錯誤: {e}")
+
 get_websocket()
-# event_manager.register_listener(onServerStartListener())
-
-###
-
-# class onServerStartEventForExampleEvent(Event):
-#     """ 當 伺服器 啟動 """
-#     def __init__(self, pid):
-#         self.pid = pid
-
-# original_on_start = cdps.cdps_server.CDPS.on_start
-
-# def _new_on_start(self):
-#     self.event_manager.call_event(onServerStartEventForExampleEvent("example"))
-#     original_on_start(self)
-
-# cdps.cdps_server.CDPS.on_start = _new_on_start
-
-# class onServerStartEventForExampleListener(Listener):
-#     event = onServerStartEventForExampleEvent
-#     is_run = False
-
-#     def on_event(self, event):
-#         if (self.is_run == False):
-#             print("holle word!")
-#             print(event.pid)
-#             print("2!")
-#             self.is_run = True
-
-# event_manager.register_listener(onServerStartEventForExampleListener())

@@ -1,7 +1,6 @@
 # from datetime import datetime
 import json
 import time
-# from threading import Thread
 from cdps.utils.logger import Log
 import websocket
 
@@ -14,15 +13,11 @@ def init(ws_send_server):
     ws_send = ws_send_server
 
 def on_message(ws, message, callback):
-    # print("Received message: " + message)
-    # threading.Thread(target=data_store, args=(message,)).start()
     callback(message)
 
 
 def on_error(ws, error):
     log.logger.info("Error: " + str(error))
-    # log.logger.info(f"[{datetime.now().strftime('%Y/%m/%d %H:%M:%S')}]" +
-    #       "\nError: " + str(error))
 
 
 def on_close(ws, close_status_code, close_msg):
@@ -53,7 +48,6 @@ def on_open(ws):
     else:
         ws.send("Hello")
     log.logger.info(f"WS open, server = {select_count}")
-    # log.logger.info(f"[{datetime.now().strftime('%Y/%m/%d %H:%M:%S')}] WS open, server = {url_count}")
 
 
 def start_client(callback, ws_server, select_ws_server):
@@ -62,7 +56,7 @@ def start_client(callback, ws_server, select_ws_server):
     select_count = select_ws_server
     callback_name = callback
 
-    # websocket.enableTrace(False)
+    websocket.enableTrace(False)
     ws = websocket.WebSocketApp(ws_server[select_ws_server],
                                 on_open=on_open,
                                 on_message=lambda ws, msg: on_message(
@@ -71,5 +65,3 @@ def start_client(callback, ws_server, select_ws_server):
                                 on_close=on_close)
 
     ws.run_forever()
-    # Thread(target=lambda: ws.run_forever()).start()
-    # return (ws)

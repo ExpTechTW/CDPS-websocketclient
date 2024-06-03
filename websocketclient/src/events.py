@@ -6,3 +6,9 @@ class onRun(Event):
 
     def __init__(self):
         self.is_run = False #是否為初次啟動
+
+class onData(Event):
+    """ 當 取得 資料 """
+
+    def __init__(self, data:dict):
+        self.data = data #取得 資料
