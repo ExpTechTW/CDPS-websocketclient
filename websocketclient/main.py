@@ -1,8 +1,8 @@
 import datetime
 import json
-import threading
 from cdps.plugin.manager import Manager, Listener
 from cdps.plugin.events import Event,onServerStartEvent
+from cdps.plugin.thread import new_thread
 from cdps.utils.logger import Log
 
 import plugins.websocketclient.src.ws as ws_
@@ -38,20 +38,18 @@ def data_store(new_data):
 def ws_callback(message):
     data_store(message)
 
-def get_websocket(stop_event):
-    while not stop_event.is_set():
-        ws_.start_client(ws_callback, config['ws_server'], config['select_ws_server'])
-
-def task(stop_event):
+@new_thread
+def get_websocket():
     event_manager.call_event(onRun())
     if (onRun().is_run == False):
         ws_.init(config['ws_send_server'])
-        task_thread_1 = threading.Thread(target=get_websocket, args=(stop_event,))
-        task_thread_1.start()
+        ws_.start_client(ws_callback, config['ws_server'], config['select_ws_server'])
         onRun().is_run = True
+
 
 log = Log()
 event_manager = Manager()
+get_websocket()
 # event_manager.register_listener(onServerStartListener())
 
 ###
