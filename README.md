@@ -15,6 +15,7 @@
 - `ws_server` 向伺服器連線的網址
 - `select_ws_server` 首次"向伺服器連線的網址"的位置
 - `ws_send_server` 向伺服器傳送的訊息
+- `log_show` 是否打印伺服器接收的訊息
 
 ## 貢獻者
 - yayacat `程式開發` `文檔`
