@@ -1,0 +1,5 @@
+{
+    "ws_server": ["wss://lb-1.exptech.dev/websocket"],
+    "select_ws_server": 0,
+    "ws_send_server": {}
+  }

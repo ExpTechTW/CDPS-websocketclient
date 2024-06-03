@@ -1,4 +1,4 @@
-# 模板
+# CDPS-websocketclient
 <img alt="Discord" src="https://img.shields.io/discord/926545182407688273">
 
 ------
@@ -6,12 +6,20 @@
 - 這是一個 ExpTech Github 模板
 
 ## 索引
-- [貢獻者](#貢獻者)
-- [發佈規則](#發佈規則)
-- [合作](#合作)
+- [CDPS-websocketclient](#cdps-websocketclient)
+  - [索引](#索引)
+  - [設定](#設定)
+  - [貢獻者](#貢獻者)
+  - [發佈規則](#發佈規則)
+  - [合作](#合作)
+
+## 設定
+- `ws_server` 向伺服器連線的網址
+- `select_ws_server` 首次"向伺服器連線的網址"的位置
+- `ws_send_server` 向伺服器傳送的訊息
 
 ## 貢獻者
-- whes1015 `文檔`
+- yayacat `程式開發` `文檔`
 
 ------
 
