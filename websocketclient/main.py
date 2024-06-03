@@ -30,10 +30,14 @@ class onServerStartListener(Listener):
     def ws_callback(self, message):
         self.data_store(message)
 
+    def get_websocket(self):
+        ws_.start_client(self.ws_callback, config['ws_server'], config['select_ws_server'])
+
     def on_event(self, event):
         if (self.is_run == False):
             ws_.init(config['ws_send_server'])
-            ws_.start_client(self.ws_callback, config['ws_server'], config['select_ws_server'])
+            task_thread_1 = threading.Thread(target=self.get_websocket)
+            task_thread_1.start()
             self.is_run = True
 
 log = Log()
