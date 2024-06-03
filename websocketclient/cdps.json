@@ -10,7 +10,7 @@
         "yayacat"
     ],
     "dependencies": {
-        "cdps": ">=1.0.13",
+        "cdps": ">=1.0.17",
         "websocket-client": ">=1.8.0"
     },
     "resources": [
