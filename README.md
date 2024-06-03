@@ -6,8 +6,6 @@
 - 這是一個 ExpTech Github 模板
 
 ## 索引
-- [CDPS-websocketclient](#cdps-websocketclient)
-  - [索引](#索引)
   - [設定](#設定)
   - [貢獻者](#貢獻者)
   - [發佈規則](#發佈規則)
