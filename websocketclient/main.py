@@ -1,6 +1,7 @@
 import datetime
 import json
 import shutil
+import time
 from cdps.plugin.manager import Manager, Listener
 from cdps.plugin.events import Event,onServerStartEvent
 from cdps.plugin.thread import new_thread
@@ -9,7 +10,7 @@ from cdps.utils.logger import Log
 from plugins.websocketclient.src.ws import ws
 from plugins.websocketclient.src.events import onData, onRun
 
-### test
+###
 
 def data_store(new_data):
     try:
@@ -30,6 +31,11 @@ def get_websocket():
         ws.init(ws, config['ws_send_server'])
         ws.start_client(ws, ws_callback, config['ws_server'], int(config['select_ws_server']), data_obj)
         run_obj.is_run = True
+
+# @new_thread
+# def close_test():
+#     time.sleep(5)
+#     ws.close_ws(ws)
 
 log = Log()
 event_manager = Manager()
@@ -60,3 +66,5 @@ if 'log_show' not in config:
         log.logger.error(f"發生錯誤: {e}")
 
 get_websocket()
+
+# close_test()

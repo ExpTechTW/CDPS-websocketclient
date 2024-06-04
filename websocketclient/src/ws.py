@@ -34,8 +34,7 @@ class ws():
             if ws_server_count_num != int(1):
                 ws.select_count += int(1)
                 if ws.select_count > ws_server_count_num: ws.select_count = int(0)
-            ws.wsc.close()
-            self.start_client(ws.callback_name, ws.ws_server_count, ws.select_count, ws.data_obj_on)
+            ws.start_client(ws, ws.callback_name, ws.ws_server_count, ws.select_count, ws.data_obj_on)
 
 
     def close_ws(self, status=int(0)):
