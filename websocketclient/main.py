@@ -6,7 +6,7 @@ from cdps.plugin.events import Event,onServerStartEvent
 from cdps.plugin.thread import new_thread
 from cdps.utils.logger import Log
 
-import plugins.websocketclient.src.ws as ws_
+from plugins.websocketclient.src.ws import ws
 from plugins.websocketclient.src.events import onData, onRun
 
 ###
@@ -27,8 +27,8 @@ def ws_callback(message):
 @new_thread
 def get_websocket():
     if (run_obj.is_run == False):
-        ws_.init(config['ws_send_server'])
-        ws_.start_client(ws_callback, config['ws_server'], int(config['select_ws_server']), data_obj)
+        ws.init(ws, config['ws_send_server'])
+        ws.start_client(ws, ws_callback, config['ws_server'], int(config['select_ws_server']), data_obj)
         run_obj.is_run = True
 
 log = Log()
