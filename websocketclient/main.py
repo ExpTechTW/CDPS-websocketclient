@@ -34,8 +34,10 @@ def get_websocket():
 
 # @new_thread
 # def close_test():
-#     time.sleep(5)
-#     ws.close_ws(ws)
+#     while True:
+#         time.sleep(5)
+#         ws.close_ws(ws)
+#         time.sleep(5)
 
 log = Log()
 event_manager = Manager()
@@ -47,11 +49,13 @@ event_manager.call_event(data_obj)
 src_file = "./plugins/websocketclient/config.json"
 dst_file = "./config/websocketclient.json"
 backup_file = "./config/websocketclient_backup.json"
+config = {}
 
 with open(dst_file, 'r', encoding='utf-8') as f:
-    config = json.loads(f.read())
+    config:dict = json.loads(f.read())
 
-if 'log_show' not in config:
+def copy_config_json():
+    global config
     try:
         shutil.copy2(dst_file, backup_file)
         log.logger.info(f"舊設定檔案已成功複製到 {backup_file}")
@@ -64,6 +68,11 @@ if 'log_show' not in config:
         log.logger.error(f"無法複製檔案: {e}")
     except Exception as e:
         log.logger.error(f"發生錯誤: {e}")
+
+if 'log_show' not in config:
+    copy_config_json()
+if config['ws_send_server'] == {}:
+    copy_config_json()
 
 get_websocket()
 

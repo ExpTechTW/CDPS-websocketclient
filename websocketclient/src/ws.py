@@ -30,7 +30,7 @@ class ws():
         ws.log.logger.info(f"Connection closed")
         if ws.code != 999:
             time.sleep(3)
-            ws_server_count_num = len(ws.ws_server_count)
+            ws_server_count_num = len(ws.ws_server_count) - 1
             if ws_server_count_num != int(1):
                 ws.select_count += int(1)
                 if ws.select_count > ws_server_count_num: ws.select_count = int(0)
@@ -53,7 +53,7 @@ class ws():
             ws.wsc.send(ws.ws_send)
         else:
             ws.wsc.send("Hello")
-        ws.log.logger.info(f"WS open, server = {ws.select_count}")
+        ws.log.logger.info(f"WS open, server = {ws.ws_server_count[ws.select_count]}")
 
 
     def start_client(self, callback:None, ws_server:list, select_ws_server:int, data_obj):

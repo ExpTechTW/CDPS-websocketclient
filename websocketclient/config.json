@@ -1,6 +1,21 @@
 {
-    "ws_server": ["wss://lb-1.exptech.dev/websocket"],
-    "select_ws_server": 0,
-    "ws_send_server": {},
-    "log_show": true
-  }
+  "ws_server": ["wss://lb-1.exptech.dev/websocket"],
+  "select_ws_server": 0,
+  "ws_send_server": {
+    "type": "start",
+    "service": [
+      "trem.rts",
+      "trem.rtw",
+      "websocket.eew",
+      "websocket.report",
+      "websocket.tsunami",
+      "trem.intensity",
+      "cwa.intensity"
+    ],
+    "config": {
+      "trem.rtw": [11334880, 6732340]
+    },
+    "key": "your key input here"
+  },
+  "log_show": true
+}
