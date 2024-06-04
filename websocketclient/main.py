@@ -13,29 +13,30 @@ from plugins.websocketclient.src.events import onData, onRun
 
 def data_store(new_data):
     try:
-        new_data = json.loads(new_data)
+        new_msg = json.loads(new_data)
     except:
         pass
-    if type(new_data) == dict:
-        event_manager.call_event(onData())
-        onData().init(new_data)
+    if type(new_msg) == dict:
+        data_obj.wirite(new_msg)
         if config['log_show']:
-            log.logger.info(onData().get())
+            log.logger.info(data_obj.get())
 
 def ws_callback(message):
     data_store(message)
 
 @new_thread
 def get_websocket():
-    event_manager.call_event(onRun())
-    if (onRun().is_run == False):
+    if (run_obj.is_run == False):
         ws_.init(config['ws_send_server'])
-        ws_.start_client(ws_callback, config['ws_server'], config['select_ws_server'])
-        onRun().is_run = True
-
+        ws_.start_client(ws_callback, config['ws_server'], int(config['select_ws_server']), data_obj)
+        run_obj.is_run = True
 
 log = Log()
 event_manager = Manager()
+run_obj = onRun()
+data_obj = onData()
+event_manager.call_event(run_obj)
+event_manager.call_event(data_obj)
 
 src_file = "./plugins/websocketclient/config.json"
 dst_file = "./config/websocketclient.json"
