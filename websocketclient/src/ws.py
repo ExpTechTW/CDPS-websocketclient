@@ -39,8 +39,7 @@ class ws():
 
     def close_ws(self, status=int(0)):
         ws.code = status
-        if ws.code != 999:
-            ws.wsc.close()
+        ws.wsc.close()
 
 
     def on_open(self):

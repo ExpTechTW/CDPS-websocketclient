@@ -1,9 +1,7 @@
-import datetime
 import json
 import shutil
-import time
-from cdps.plugin.manager import Manager, Listener
-from cdps.plugin.events import Event,onServerStartEvent
+from cdps.plugin.manager import Manager, Listener, event_listener
+from cdps.plugin.events import onCommandEvent
 from cdps.plugin.thread import new_thread
 from cdps.utils.logger import Log
 
@@ -25,12 +23,12 @@ def data_store(new_data):
 def ws_callback(message):
     data_store(message)
 
-@new_thread
+@new_thread("get_websocket")
 def get_websocket():
-    if (run_obj.is_run == False):
+    if run_obj.is_run == False:
+        run_obj.is_run = True
         ws.init(ws, config['ws_send_server'])
         ws.start_client(ws, ws_callback, config['ws_server'], int(config['select_ws_server']), data_obj)
-        run_obj.is_run = True
 
 # @new_thread
 # def close_test():
@@ -38,6 +36,36 @@ def get_websocket():
 #         time.sleep(5)
 #         ws.close_ws(ws)
 #         time.sleep(5)
+
+# @event_listener(onServerStartEvent)
+# class onServerStartListener(Listener):
+
+#     def on_event(self, event):
+#         print(event.pid)
+
+# @event_listener(onPluginReloadEvent, "websocketclient")
+# class onPluginReloadEventListener(Listener):
+#     def on_event(self, event):
+#         log.logger.info(event.name)
+#         if event.name == "websocketclient":
+#             event_manager.unregister_listener(onPluginReloadEventListener(), "websocketclient")
+#             ws.close_ws(ws, 999)
+
+@event_listener(onCommandEvent)
+class onServerCommandListener(Listener):
+
+    def on_event(self, event):
+        if event.command == "wsc close":
+            if run_obj.is_run == True:
+                ws.close_ws(ws, 999)
+                run_obj.is_run = False
+            elif run_obj.is_run == False:
+                log.logger.warning("websocketclient 的 websocket 已關閉")
+        elif event.command == "wsc start":
+            if run_obj.is_run == False:
+                get_websocket()
+            elif run_obj.is_run == True:
+                log.logger.warning("websocketclient 的 websocket 已運行")
 
 log = Log()
 event_manager = Manager()
@@ -72,6 +100,8 @@ def copy_config_json():
 if 'log_show' not in config:
     copy_config_json()
 if config['ws_send_server'] == {}:
+    copy_config_json()
+if config['log_show']:
     copy_config_json()
 
 get_websocket()
