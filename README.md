@@ -17,6 +17,50 @@
 - `ws_send_server` 向伺服器傳送的訊息
 - `log_show` 是否打印伺服器接收的訊息
 
+## 外部擴充示範用法
+```py
+from cdps.plugin.manager import Manager, Listener
+from cdps.plugin.thread import new_thread
+from cdps.utils.logger import Log
+from cdps.plugin.events import Event
+from plugins.websocketclient.src.events import onData
+import cdps.cdps_server
+
+class onWsEvent(Event):
+    """ 當 伺服器 啟動 """
+    def __init__(self, pid):
+        self.pid = pid
+
+original_on_start = cdps.cdps_server.CDPS.on_start
+
+def _new_on_start(self):
+    self.event_manager.call_event(onWsEvent("test"))
+    original_on_start(self)
+
+cdps.cdps_server.CDPS.on_start = _new_on_start
+
+class onWsListener(Listener):
+    event = onWsEvent
+
+    def on_event(self, event):
+        get_websocket_test()
+
+log = Log()
+data_obj = onData()
+
+@new_thread
+def get_websocket_test():
+    data_get = {}
+    while True:
+        data_get_temp = data_obj.get()
+        if data_get != data_get_temp:
+            data_get = data_get_temp
+            log.logger.info(f"test {data_get}")
+
+event_manager = Manager()
+event_manager.register_listener(onWsListener())
+```
+
 ## 貢獻者
 - yayacat `程式開發` `文檔`
 
